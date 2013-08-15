@@ -1125,6 +1125,7 @@ var cursorSupportedByOplogTailing = function (cursorDescription) {
 MongoInternals.MongoTimestamp = MongoDB.Timestamp;
 
 MongoInternals.Connection = MongoConnection;
+MongoInternals.NpmModule = MongoDB;
 
 MongoTest = {
   cursorSupportedByOplogTailing: cursorSupportedByOplogTailing
