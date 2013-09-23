@@ -295,7 +295,7 @@ makeInfixSequenceMatcher = function ( symbol, fallthrough ) {
 
     allowWhitespace( tokenizer );
 
-    right = getExpression( tokenizer );
+    right = fallthrough( tokenizer );
     if ( !right ) {
       tokenizer.pos = start;
       return left;

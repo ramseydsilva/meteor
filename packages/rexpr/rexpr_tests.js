@@ -87,7 +87,6 @@ Tinytest.add("rexpr - examples", function (test) {
                            n: 'C' }] }]
              });
 
-  // XXX fails because order-of-operations code in parser is broken!
   test.equal(RExpr.parse('A * B + C'),
              { t: RExpr.INFIX_OPERATOR,
                s: '+',
@@ -101,7 +100,6 @@ Tinytest.add("rexpr - examples", function (test) {
                      n: 'C' }]
              });
 
-  // XXX fails because order-of-operations code in parser is broken!
   test.equal(RExpr.parse('A === B || C < D && ! E'),
              { t: RExpr.INFIX_OPERATOR,
                s: '||',
