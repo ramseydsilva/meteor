@@ -320,7 +320,7 @@ Meteor.publish(null, function() {
   if (this.userId) {
     return Meteor.users.find(
       {_id: this.userId},
-      {fields: {profile: 1, username: 1, emails: 1}});
+      {fields: {profile: 1, username: 1, emails: 1, "services.password.reset.when": 1}});
   } else {
     return null;
   }
