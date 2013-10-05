@@ -313,7 +313,21 @@ Accounts.insertUserDoc = function (options, user) {
     var match = e.err.match(/^E11000 duplicate key error index: ([^ ]+)/);
     if (!match) throw e;
     if (match[1].indexOf('$emails.address') !== -1)
-      throw new Meteor.Error(403, "Email already exists.");
+        existing_user = Meteor.users.findOne({'emails.address': user.emails[0].address });
+        if (!!existing_user) {
+            existing_service = _.find(existing_user.services, function(value, key) {
+                if (!!existing_user.services[key].accessToken){
+                    throw new Meteor.Error(403, "You previously logged in via " + key + 
+                    ". Please log in via " + key + " again and set a password to be able to log in using a password in future.");
+                    return true;
+                }
+            });
+            if (!existing_service) {
+                throw new Meteor.Error(403, "Email already exists.");
+            }
+        } else {
+            throw new Meteor.Error(403, "Unknown Error");
+        }
     if (match[1].indexOf('username') !== -1)
       throw new Meteor.Error(403, "Username already exists.");
     // XXX better error reporting for services.facebook.id duplicate, etc
