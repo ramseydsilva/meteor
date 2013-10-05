@@ -62,8 +62,10 @@ Meteor.methods({beginPasswordExchange: function (request) {
     if (!!existing_user) {
         existing_service = _.find(existing_user.services, function(value, key) {
             if (!!existing_user.services[key].accessToken){
-                throw new Meteor.Error(403, "You previously logged in via " + key + 
-                ". Please log in via " + key + " again and set a password to be able to log in using a password in future.");
+                throw new Meteor.Error(403, "You previously logged in via " + key +
+                ". You can log into your account via " + key + " again or click on the forgot password " +
+                "link to be able to log in using a password in future.");
+
                 return true;
             }
         });
