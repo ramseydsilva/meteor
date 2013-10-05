@@ -57,9 +57,22 @@ Meteor.methods({beginPasswordExchange: function (request) {
   if (!user)
     throw new Meteor.Error(403, "User not found");
 
-  if (!user.services || !user.services.password ||
-      !user.services.password.srp)
-    throw new Meteor.Error(403, "User has no password set");
+  if (!user.services || !user.services.password || !user.services.password.srp) {
+    existing_user = Meteor.users.findOne({'emails.address': user.emails[0].address });
+    if (!!existing_user) {
+        existing_service = _.find(existing_user.services, function(value, key) {
+            if (!!existing_user.services[key].accessToken){
+                throw new Meteor.Error(403, "You previously logged in via " + key + 
+                ". Please log in via " + key + " again and set a password to be able to log in using a password in future.");
+                return true;
+            }
+        });
+        if (!existing_service)
+            throw new Meteor.Error(403, "User has no password set");
+    } else {
+          throw new Meteor.Error(403, "Unkown Error");
+    }
+  }
 
   var verifier = user.services.password.srp;
   var srp = new SRP.Server(verifier);
