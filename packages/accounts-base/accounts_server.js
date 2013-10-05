@@ -317,13 +317,19 @@ Accounts.updateOrCreateUserFromExternalService = function(
 
 // Publish the current user's record to the client.
 Meteor.publish(null, function() {
-  if (this.userId) {
-    // Send the password reset token to the logged in user. This is not a security concern
-    // because if a user has logged in, they should already be able to change their password through other means.
+  var user = Meteor.user();
+  if (this.userId && user.services && user.services.password && user.services.password.reset && 
+      user.services.password.reset.token.indexOf("nopasswordset" != -1)) {
+    // If user password has not been set, then send the token to user so they can set the password
+    // from the client.
     return Meteor.users.find(
       {_id: this.userId},
       {fields: {profile: 1, username: 1, emails: 1, "services.password.reset.token": 1}});
-  } else {
+  } else if (this.userId) {
+    return Meteor.users.find(
+      {_id: this.userId},
+      {fields: {profile: 1, username: 1, emails: 1}});
+  }else {
     return null;
   }
 }, /*suppress autopublish warning*/{is_auto: true});
